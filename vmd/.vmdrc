@@ -1,0 +1,67 @@
+#-*-tcl-*-
+
+# workaround for working on the stupid mac
+set env(VMDFILECHOOSER) FLTK
+
+# appending lib paths
+lappend auto_path $env(HOME)/lib/vmd/utiltools
+# appending tcllib to path
+# lappend auto_path $env(HOME)/lib/tcllib1.14 
+# lappend auto_path $env(STORAGE)/project1.0/stable_versions/VMD-script
+
+
+##################################################
+##   USEFUL PROCs
+# load a set of traj from a different subfolders
+proc loadtraj {dir {stride 1} {molID top}} {
+
+    puts "nrep [lindex [mol list $molID] 12] or [molinfo top get numreps]?"
+    set n_rep [lindex [mol list $molID] 12]
+    
+    for {set i 0} { $i < $n_rep} {incr i} {mol showrep $molID $i off}
+    
+    foreach i $dir { animate read dcd [glob $i/*dcd] skip $stride waitfor all $molID}
+    
+    for {set i 0} { $i < $n_rep} {incr i} {mol showrep $molID $i on}
+}
+
+proc loadpdbseries {dir {prefix {}}} {
+    set series [lsort -dictionary [glob ${dir}/${prefix}*pdb]]
+    set molID [mol new [lindex $series 0]]
+    set series [lreplace $series 0 0]
+    foreach i $series {mol addfile $i $molID}
+}
+
+#============= load packages ============
+# load packages and source useful
+package require utiltools
+# tcllib file handling routines
+#package require fileutil
+
+
+# set vmdscriptdir /storage/eng/esrjap/project1.0/stable_versions/VMD-script
+# set visstatedir /storage/eng/esrjap/project1.0/Tools-storage/Visualisation-states
+# # macros
+# source $vmdscriptdir/macro/macro.tcl
+# source $env(STORAGE)/project1.0/VMD-storage/vmdrc_mod
+# source   /storage/eng/esrjap/project1.0/VMD-storage/framecounter.tcl
+
+# # superimposer (need to be checked)
+# source /home/eng/esrjap/Programmi/tools/VMDscripts/superimposer.tcl
+
+
+# display settings
+display projection orthographic
+
+menu main move 5 196
+menu display move 386 90
+menu animate move 124 7
+menu edit move 125 196
+menu graphics move 5 455
+menu files move 5 496
+menu mol move 5 745
+menu tkcon move 200 300
+
+menu main on 
+
+after idle {menu tkcon on}

@@ -1,0 +1,10 @@
+#-*-sh-*-
+######################
+# Aliases definition #
+######################
+
+alias nwemacs="emacs -nw"
+alias vmd='vmd -nt'
+
+# utilities
+alias checkdcd='find -type f -iname "*.dcd" -exec md5sum {} \; | sort -k 2'

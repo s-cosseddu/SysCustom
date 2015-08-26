@@ -1,0 +1,154 @@
+#-*-sh-*-
+######################
+# tools for bash     #
+######################
+
+function extract()      # Handy Extract Program.
+{
+     if [ -f $1 ] ; then
+         case $1 in
+             *.tar.bz2)   tar xvjf $1     ;;
+             *.tar.gz)    tar xvzf $1     ;;
+             *.bz2)       bunzip2 $1      ;;
+             *.rar)       unrar x $1      ;;
+             *.gz)        gunzip $1       ;;
+             *.tar)       tar xvf $1      ;;
+             *.tbz2)      tar xvjf $1     ;;
+             *.tgz)       tar xvzf $1     ;;
+             *.zip)       unzip $1        ;;
+             *.Z)         uncompress $1   ;;
+             *.7z)        7z x $1         ;;
+             *)           echo "'$1' cannot be extracted via >extract<" ;;
+         esac
+     else
+         echo "'$1' is not a valid file"
+     fi
+}
+
+function calc ()
+{
+echo "the result is"
+echo "scale=10;$1" | bc
+}
+
+function dusort ()
+{
+sizeunit=${2:-"G"}
+du -h --max-depth=${1:-1} --block-size=1${2:-$sizeunit} |sort -nr | awk '{print $1 unit"\t",$2}' unit=$sizeunit
+}
+
+function writeto ()
+{
+echo "
+
+$(date):" >> $1 
+cat >> $1 <<EOF
+$2
+EOF
+}
+
+function cutrows ()
+{
+    # remove out rows from a file 
+    awk '{if (NR%skip==0) {print $0}}' skip=$2 $1
+}
+
+function eps2pdf ()
+{
+name=$(basename $1 .eps)
+
+epstopdf $1 --outfile=$name.tmp.pdf
+pdftk $name.tmp.pdf cat 1-endE output $name.pdf
+rm $name.tmp.pdf
+}
+
+function cleantexdir ()
+{
+    # tex files
+    rm -iv *log *toc *nav _* *aux *snm
+}
+
+# =============== MD Tools ===============
+function measureBox ()
+{
+    pdb=$1
+    sel=${2:-water}
+    echo "$pdb -> $sel"
+echo "mol new $pdb;
+set string $sel;
+regsub -all , \$string \" \" string ;
+puts \"working on \$string\";
+eval vecsub [measure minmax [atomselect top \" \$string \"]] " | vmd -dispdev none -eofexit
+}
+
+function gettotcharge ()
+{
+echo "mol new $1;
+puts \"total charge [vecsum [[atomselect top all] get charge]]\"" | vmd -dispdev none -eofexit
+}
+
+function printAtomIdx ()
+{
+# writing an index file for catdcd
+echo "
+mol new $1;
+set idxfile [open idx.txt w]; 
+puts \$idxfile [[atomselect top \"$2\"] get index];
+close \$idxfile" | vmd -dispdev none -eofexit
+}
+
+function dcdComputeRelavant ()
+{
+
+if [ -z $1 ] 
+then 
+    echo "
+dcdComputeRelavant <structure file> <dcd files...>
+"
+    return 1
+fi
+
+# output relavant protein atom coords
+swissVMDknife converter dcd2ASCII $@ . selprot "resid,73,to,80,71,89,64,82,and,name,CA,NH1,NH2,OD1,OD2,OE1,OE2,OG1,N,C,O,OH" #\
+#dihe resid80 A "resid,80,and,name,C" B "resid,80,and,name,CA" C "resid,80,and,name,CB" D "resid,80,and,name,CG"
+rm -r trajtools
+
+# output ions and water
+swissVMDknife converter dcd2ASCII $@ . sel "(resid,3001,3003,3005,and,name,POT),or,(name,OH2,and,within,3.5,of,(resid,3001,3003,3005,and,name,POT))" ref kcsafilterref #\
+#dihe resid71 A "resid,71,and,name,C" B "resid,71,and,name,CA" C "resid,71,and,name,CB" D "resid,71,and,name,CG"
+rm -r trajtools
+
+swissVMDknife calcrmsd  -sel "protein,and,backbone,and,resid,74,to,79,and,noh" -cutlast 0 -cutbeg 0 -s $@
+mv rmsd.dat SFrmsd.dat
+swissVMDknife calcrmsd  -sel "protein,and,backbone,and,noh" -s $@
+mv rmsd.dat protrmsd.dat
+
+}
+
+function extractNAMDstats () 
+{
+echo -n "# " > statistics.data
+grep -m 1 ^ETITLE $1 >> statistics.data
+grep ^ENERGY: $1 | cut -f2- -d" "  >> statistics.data
+}
+
+function rmtmppmf ()
+{
+
+if [ -z $1 ] 
+then 
+    echo "rmtmppmf prefix firstframe stride lastframe newstride
+use somenthing like ls *pmf | cut -d "." -f 3 | sort -n | head to know firstframe stride lastframe"
+    return 1
+fi
+    
+prefix=$1
+cp ${prefix}.${4}.pmf  ${prefix}.${4}.lastframe.pmf
+for i in $(seq $2 $3 $4) 
+do  
+    if (( $i%$5 != 0 )); then 
+	rm -v ${prefix}.${i}.pmf
+    fi
+done
+}
+
