@@ -39,15 +39,15 @@ package require utiltools
 #package require fileutil
 
 
-# set vmdscriptdir /storage/eng/esrjap/project1.0/stable_versions/VMD-script
-# set visstatedir /storage/eng/esrjap/project1.0/Tools-storage/Visualisation-states
+# set vmdscriptdir $env(STORAGE)/project1.0/stable_versions/VMD-script
+# set visstatedir $env(STORAGE)/project1.0/Tools-storage/Visualisation-states
 # # macros
 # source $vmdscriptdir/macro/macro.tcl
 # source $env(STORAGE)/project1.0/VMD-storage/vmdrc_mod
-# source   /storage/eng/esrjap/project1.0/VMD-storage/framecounter.tcl
+# source   $env(STORAGE)/project1.0/VMD-storage/framecounter.tcl
 
 # # superimposer (need to be checked)
-# source /home/eng/esrjap/Programmi/tools/VMDscripts/superimposer.tcl
+# source $env(STORAGE)/tools/VMDscripts/superimposer.tcl
 
 
 # display settings

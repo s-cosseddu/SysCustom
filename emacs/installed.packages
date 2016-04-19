@@ -6,7 +6,7 @@
 ;; User-defined variable   
 ;; List of packages:
 ;; C-h v package-activated-list
-(setq package-list '(company-auctex auctex company yasnippet company-statistics company org vlf yasnippet))
+(setq package-list '(gh-md pkg-info epl markdown-mode auctex ess-R-data-view ess ctable popup company-auctex company yasnippet company-statistics org vlf yasnippet))
 
 
 ;; -------------------------------------------
