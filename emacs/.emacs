@@ -7,14 +7,34 @@
 (setq inhibit-startup-message t)
 
 ;; font size
-(set-face-attribute 'default nil :height 170)
+;;(set-face-attribute 'default nil :height 170)
+
+;; theme
+(custom-set-variables
+ '(custom-enabled-themes (quote (zenburn)))
+ '(custom-safe-themes
+   (quote
+    ("c4465c56ee0cac519dd6ab6249c7fd5bb2c7f7f78ba2875d28a50d3c20a59473" default))))
+(custom-set-faces
+ '(default ((t (:height 180 :family "Consolas"))))
+ )
 
 ;; move between windows with shift
 (windmove-default-keybindings)
 
+;; -----------------
+;; additional 
+;; ;; to avoid dumb mac key choices 
+;; (setq mac-option-key-is-meta nil)
+;; (setq mac-command-key-is-meta t)
+;; (setq mac-command-modifier 'meta)
+;; (setq mac-option-modifier nil)
+;; 
+
 ;; --------------------
 ;; packages
 
+;; repositories
 ;; MELPA
 (require 'package) ;; You might already have this line
 (add-to-list 'package-archives
@@ -24,11 +44,11 @@
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize) ;; You might already have this line
 
+;; -----
 
 ;; ;; ess
 ;; (add-to-list 'load-path "~/Programmi/emacs/plugin/ess-14.09/lisp/")
 ;; (load "ess-site")
-
 
 ;; esmd
 (load "~/Programmi/emacs/plugin/ESMD/esmd.el")
@@ -45,7 +65,6 @@
 (global-set-key (kbd "<C-tab>") 'company-complete-common)
 (add-hook 'after-init-hook 'global-company-mode)
 ;; (setq company-global-modes '(not ESS-MODE))
-
 
 ;;ido
 (require 'ido)
@@ -69,13 +88,4 @@
 (setq reftex-plug-into-AUCTeX t)
 (setq-default TeX-PDF-mode t) 
 
-
-;; -----------------
-;; additional 
-;; ;; to avoid dumb mac key choices 
-;; (setq mac-option-key-is-meta nil)
-;; (setq mac-command-key-is-meta t)
-;; (setq mac-command-modifier 'meta)
-;; (setq mac-option-modifier nil)
-;; 
 
