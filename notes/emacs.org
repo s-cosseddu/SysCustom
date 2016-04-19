@@ -1,0 +1,14 @@
+* Search
+** Incremental search
+   - C-x C-x to go initial point after C-s foo
+** imenu   
+   - M-x imenu will let you jump to a function
+   definition (etc.) by name. You can also bind it to a mouse click to
+   get a menu of functions (or add it to the menubar; see the Info page
+   for more detail). It provides data for which-function-mode, which will
+   let you see which function you are currently inside in the
+   modeline. 
+   - Speedbar displays the imenu information (and
+   other things) graphically.
+** occur
+   - M-x occur <regex>

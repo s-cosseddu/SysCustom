@@ -46,3 +46,7 @@
 (global-set-key (kbd "<C-tab>") 'company-complete-common)
 (add-hook 'after-init-hook 'global-company-mode)
 ;; (setq company-global-modes '(not ESS-MODE))
+
+;;ido
+(require 'ido)
+(ido-mode t)
