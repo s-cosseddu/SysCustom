@@ -15,6 +15,9 @@
  '(custom-safe-themes
    (quote
     ("c4465c56ee0cac519dd6ab6249c7fd5bb2c7f7f78ba2875d28a50d3c20a59473" default))))
+;; alternative 
+;;(add-hook 'after-init-hook (lambda () (load-theme 'zenburn t)))
+
 (custom-set-faces
  '(default ((t (:height 180 :family "Consolas"))))
  )
@@ -88,4 +91,23 @@
 (setq reftex-plug-into-AUCTeX t)
 (setq-default TeX-PDF-mode t) 
 
+;; hideshow
+(global-set-key (kbd "C-c <right>") 'hs-show-block)
+(global-set-key (kbd "C-c <left>")  'hs-hide-block)
+(global-set-key (kbd "C-c <up>")    'hs-hide-all)
+(global-set-key (kbd "C-c <down>")  'hs-show-all)
 
+(add-hook 'tcl-mode-hook 'hs-minor-mode)
+(add-hook 'vmd-mode-hook 'hs-minor-mode)
+
+;; python
+(package-initialize)
+(elpy-enable)
+(elpy-use-ipython)
+(require 'linum)
+(add-hook 'elpy-mode-hook
+	  (lambda ()
+	    (linum-mode 1)))  
+;; ;; To use ipython in the standard python mode
+;; setq python-shell-interpreter "ipython"
+;;        python-shell-interpreter-args "-i")
